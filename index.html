@@ -5,231 +5,493 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Daily Qualified Jobs Tracker — Vishesh Teng</title>
 <meta name="description" content="Running tracker of qualifying job postings for Vishesh Teng — Product Manager, Technical Program/Digital Transformation Manager, Strategy Consultant, and QA/Test Automation Manager roles.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
 <style>
-  :root { color-scheme: light; }
+  :root {
+    color-scheme: dark;
+    --bg: #031427;
+    --bg-elev: rgba(255,255,255,0.04);
+    --bg-elev-hover: rgba(255,255,255,0.07);
+    --border: rgba(255,255,255,0.10);
+    --border-soft: rgba(255,255,255,0.06);
+    --text: #d3e4fe;
+    --text-muted: #8ea3c4;
+    --text-dim: #5f7699;
+    --accent: #7bd0ff;
+    --accent-soft: rgba(123,208,255,0.12);
+    --accent-border: rgba(123,208,255,0.35);
+    --accent-ink: #00354a;
+    --score-high: #34d399;
+    --score-medhigh: #5eead4;
+    --score-med: #fbbf24;
+    --score-lowmed: #fb923c;
+    --score-low: #94a3b8;
+    --applied: #34d399;
+    --interested: #fbbf24;
+    --ignored: #64748b;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+  }
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    background: #f7f7f8;
-    color: #1a1a1a;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: radial-gradient(ellipse 1200px 600px at 50% -10%, rgba(123,208,255,0.10), transparent), var(--bg);
+    background-attachment: fixed;
+    color: var(--text);
     margin: 0;
-    padding: 24px;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 1200px; margin: 0 auto; }
-  h1 { font-size: 22px; margin-bottom: 4px; }
-  .sub { color: #555; font-size: 14px; margin-bottom: 18px; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px 64px; }
 
-  .runbar {
-    background: #eef4ff;
-    border: 1px solid #cddcf7;
-    border-radius: 8px;
-    padding: 12px 16px;
-    font-size: 13px;
-    line-height: 1.5;
-    margin-bottom: 14px;
+  /* Sticky header */
+  header.top {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    background: rgba(3,20,39,0.75);
+    border-bottom: 1px solid var(--border-soft);
+    padding: 16px 24px;
   }
+  header.top .inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand .avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #4f8ff7);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; color: var(--accent-ink); font-size: 13px;
+  }
+  .brand .name { font-weight: 700; font-size: 15px; color: #fff; line-height: 1.2; }
+  .brand .role { font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); }
+  .top-cta {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--accent); color: var(--accent-ink);
+    font-weight: 700; font-size: 13px;
+    padding: 9px 16px; border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .top-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(123,208,255,0.25); }
+
+  /* Hero */
+  .hero { padding: 48px 0 28px; }
+  .eyebrow {
+    font-size: 11.5px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; margin-bottom: 14px;
+  }
+  h1.title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: clamp(32px, 5vw, 48px);
+    line-height: 1.05;
+    margin: 0 0 14px;
+    background: linear-gradient(180deg, #ffffff, #9db3d6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  p.lede {
+    font-family: 'Source Serif 4', serif;
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--text-muted);
+    max-width: 680px;
+    margin: 0 0 28px;
+  }
+  p.lede b { color: var(--text); font-weight: 600; }
+
+  /* Animated stat counters */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .stat-card {
+    background: var(--bg-elev);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 16px 18px;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .stat-card:hover { background: var(--bg-elev-hover); transform: translateY(-2px); }
+  .stat-card .num {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 30px;
+    color: var(--accent);
+    line-height: 1.1;
+  }
+  .stat-card .label {
+    font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+    color: var(--text-dim); margin-top: 4px;
+  }
+
+  /* run info + legend */
+  .runbar {
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-border);
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
+    font-size: 13px;
+    line-height: 1.55;
+    margin: 24px 0 16px;
+    color: var(--text);
+  }
+  .runbar b { color: #fff; }
+  .runbar .note { color: var(--text-muted); display: block; margin-top: 4px; }
 
   details.legend {
-    background: #fff;
-    border: 1px solid #e3e3e6;
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 12.5px;
-    color: #555;
-    margin-bottom: 18px;
-  }
-  details.legend summary { cursor: pointer; font-weight: 600; color: #333; }
-  details.legend p { margin: 8px 0 0; line-height: 1.5; }
-
-  .stats {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-  }
-  .stat {
-    background: #fff;
-    border: 1px solid #e3e3e6;
-    border-radius: 8px;
-    padding: 10px 16px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
     font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
   }
-  .stat b { display: block; font-size: 18px; }
+  details.legend summary {
+    cursor: pointer; font-weight: 600; color: var(--text);
+    list-style: none;
+  }
+  details.legend summary::-webkit-details-marker { display: none; }
+  details.legend summary::before { content: '▸ '; color: var(--accent); }
+  details.legend[open] summary::before { content: '▾ '; }
+  details.legend p { margin: 10px 0 0; line-height: 1.6; font-family: 'Source Serif 4', serif; font-size: 14px; }
+  details.legend .confirmed { color: var(--score-high); font-family: 'Inter', sans-serif; font-weight: 600; }
+  details.legend .caveat { color: var(--score-med); font-family: 'Inter', sans-serif; font-weight: 600; }
 
-  .filters {
+  /* controls: search + sort + filters */
+  .controls {
     display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
+    gap: 10px;
     flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 16px;
   }
-  .filter-btn {
-    border: 1px solid #d6d6da;
-    background: #fff;
-    border-radius: 999px;
-    padding: 6px 14px;
-    font-size: 12.5px;
-    cursor: pointer;
-    color: #333;
+  .search-box {
+    position: relative;
+    flex: 1 1 220px;
   }
-  .filter-btn.active {
-    background: #1a1a1a;
-    color: #fff;
-    border-color: #1a1a1a;
-  }
-
-  .table-scroll { overflow-x: auto; }
-  table {
+  .search-box input {
     width: 100%;
-    border-collapse: collapse;
-    background: #fff;
-    border-radius: 8px;
-    overflow: hidden;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    padding: 10px 14px 10px 34px;
+    border-radius: var(--radius-sm);
+    outline: none;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .search-box input:focus { border-color: var(--accent-border); background: var(--bg-elev-hover); }
+  .search-box input::placeholder { color: var(--text-dim); }
+  .search-box .icon {
+    position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+    color: var(--text-dim); font-size: 14px; pointer-events: none;
+  }
+  select#sort-select {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
     font-size: 13px;
-    min-width: 900px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    outline: none;
   }
-  th, td {
-    text-align: left;
-    padding: 10px 10px;
-    border-bottom: 1px solid #ececee;
-    vertical-align: top;
-  }
-  th {
-    background: #fafafa;
-    font-size: 11.5px;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    color: #666;
-  }
-  tr.row-ignored { opacity: 0.45; }
-  tr.row-applied { background: #f3faf3; }
-  tr.row-interested { background: #fff9ef; }
+  select#sort-select:hover { background: var(--bg-elev-hover); }
 
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px; }
+  .filter-btn {
+    border: 1px solid var(--border);
+    background: var(--bg-elev);
+    color: var(--text-muted);
+    border-radius: 999px;
+    padding: 7px 15px;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .filter-btn:hover { background: var(--bg-elev-hover); color: var(--text); }
+  .filter-btn.active {
+    background: var(--accent);
+    color: var(--accent-ink);
+    border-color: var(--accent);
+    font-weight: 700;
+  }
+  .filter-count { opacity: 0.65; margin-left: 4px; font-size: 11px; }
+
+  /* Job cards */
+  .job-grid { display: flex; flex-direction: column; gap: 12px; }
+  .job-card {
+    background: var(--bg-elev);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+    animation: fadeSlideIn 0.35s ease both;
+  }
+  .job-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent-border);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+  }
+  .job-card.row-applied { border-left: 3px solid var(--applied); }
+  .job-card.row-interested { border-left: 3px solid var(--interested); }
+  .job-card.row-ignored { opacity: 0.4; }
+  .job-card.row-ignored:hover { opacity: 0.7; }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
   .score {
     display: inline-block;
-    padding: 2px 8px;
-    border-radius: 10px;
+    padding: 3px 10px;
+    border-radius: 999px;
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
     white-space: nowrap;
+    letter-spacing: 0.02em;
   }
-  .score-high { background: #d9f2df; color: #1e6b34; }
-  .score-medhigh { background: #e3f2e0; color: #3c6b2f; }
-  .score-med { background: #fff3cd; color: #7a5c00; }
-  .score-lowmed { background: #f1e9dd; color: #7a5c1a; }
-  .score-low { background: #f1f1f3; color: #555; }
+  .score-high { background: rgba(52,211,153,0.15); color: var(--score-high); }
+  .score-medhigh { background: rgba(94,234,212,0.15); color: var(--score-medhigh); }
+  .score-med { background: rgba(251,191,36,0.15); color: var(--score-med); }
+  .score-lowmed { background: rgba(251,146,60,0.15); color: var(--score-lowmed); }
+  .score-low { background: rgba(148,163,184,0.15); color: var(--score-low); }
 
   .badge {
     display: inline-block;
-    padding: 1px 7px;
-    border-radius: 4px;
-    font-size: 10px;
-    background: #e8eefc;
-    color: #2952a3;
-    margin-bottom: 4px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--accent-soft);
+    color: var(--accent);
     white-space: nowrap;
   }
   .badge-new {
     display: inline-block;
-    padding: 1px 6px;
-    border-radius: 4px;
+    padding: 3px 9px;
+    border-radius: 999px;
     font-size: 10px;
-    background: #2952a3;
-    color: #fff;
-    margin-left: 6px;
-    font-weight: 600;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 800;
+    letter-spacing: 0.03em;
   }
-  .caveat { color: #9a5b00; font-size: 11.5px; }
-  .confirmed { color: #1e6b34; font-size: 11.5px; }
-  a { color: #2952a3; }
+  .date-tag { font-size: 11px; margin-left: auto; }
+  .date-tag.confirmed { color: var(--score-high); }
+  .date-tag.caveat { color: var(--score-med); }
 
-  .status-controls { display: flex; gap: 4px; flex-wrap: wrap; }
-  .status-btn {
-    border: 1px solid #d6d6da;
-    background: #fff;
-    border-radius: 6px;
-    padding: 3px 7px;
-    font-size: 11px;
-    cursor: pointer;
-    color: #333;
-    white-space: nowrap;
+  .card-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 3px;
   }
-  .status-btn.sel-interested.active { background: #f7c948; border-color: #f7c948; color: #4a3600; }
-  .status-btn.sel-applied.active { background: #3c9d4e; border-color: #3c9d4e; color: #fff; }
-  .status-btn.sel-ignored.active { background: #999; border-color: #999; color: #fff; }
+  .card-meta {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+  .card-meta a { color: var(--accent); text-decoration: none; }
+  .card-meta a:hover { text-decoration: underline; }
+  .card-meta .dot { margin: 0 6px; color: var(--text-dim); }
+
+  .card-rationale {
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-muted);
+    border-left: 2px solid var(--border);
+    padding-left: 12px;
+    margin: 0 0 14px;
+  }
+
+  .card-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .first-seen { font-size: 11.5px; color: var(--text-dim); }
+
+  .status-controls { display: flex; gap: 6px; flex-wrap: wrap; }
+  .status-btn {
+    border: 1px solid var(--border);
+    background: transparent;
+    border-radius: var(--radius-sm);
+    padding: 5px 11px;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text-muted);
+    white-space: nowrap;
+    transition: all 0.15s ease;
+  }
+  .status-btn:hover { border-color: var(--accent-border); color: var(--text); }
+  .status-btn.sel-interested.active { background: rgba(251,191,36,0.18); border-color: var(--interested); color: var(--interested); }
+  .status-btn.sel-applied.active { background: rgba(52,211,153,0.18); border-color: var(--applied); color: var(--applied); }
+  .status-btn.sel-ignored.active { background: rgba(100,116,139,0.25); border-color: var(--ignored); color: #cbd5e1; }
 
   .empty-note {
-    background: #fff;
-    border: 1px solid #e3e3e6;
-    border-radius: 8px;
-    padding: 16px;
-    font-size: 13px;
-    color: #555;
-    margin-top: 16px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 22px;
+    font-size: 14px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 8px;
   }
+
+  .caveat-box {
+    background: var(--bg-elev);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 16px 18px;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 28px;
+  }
+  .caveat-box b { color: var(--text); }
+
   footer.foot {
-    margin-top: 18px;
+    margin-top: 20px;
     font-size: 11.5px;
-    color: #888;
+    color: var(--text-dim);
+    text-align: center;
+  }
+
+  /* toast */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #0e2338;
+    border: 1px solid var(--accent-border);
+    color: var(--text);
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 50;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 0 16px 48px; }
+    header.top { padding: 14px 16px; }
+    .card-top { gap: 6px; }
   }
 </style>
 </head>
 <body>
+
+<header class="top">
+  <div class="inner">
+    <div class="brand">
+      <div class="avatar">VT</div>
+      <div>
+        <div class="name">Vishesh Teng</div>
+        <div class="role">Job Search Tracker</div>
+      </div>
+    </div>
+    <a class="top-cta" href="https://vishesh1495.github.io/vishesh-teng/" target="_blank" rel="noopener">View Portfolio →</a>
+  </div>
+</header>
+
 <div class="wrap">
-  <h1>Daily Qualified Jobs — Tracker</h1>
-  <div class="sub">Candidate: Vishesh Teng · Static tracker — edit the JSON block below to add/update postings</div>
+  <div class="hero">
+    <div class="eyebrow">Product · Strategy · Delivery · QA</div>
+    <h1 class="title">Daily Qualified Jobs</h1>
+    <p class="lede">
+      A running list of postings <b>scored and ranked</b> for fit against 8 years across product,
+      technical delivery, strategy consulting, and QA — refreshed as new roles are found, nothing
+      dropped once it's tracked.
+    </p>
+
+    <div class="stat-grid" id="stats"><!-- filled by JS --></div>
+  </div>
 
   <div class="runbar" id="runbar"><!-- filled by JS --></div>
 
   <details class="legend">
     <summary>How this tracker works</summary>
     <p>
-      This page lists qualifying job postings (Product Manager, Technical Program/Digital Transformation Manager,
-      Strategy Consultant, QA/Test Automation Manager) scored High → Low on interview likelihood. New postings are
-      added over time by editing the <code>jobs-db</code> JSON block in this file's source and re-deploying — nothing
-      is removed automatically. Each posting shows whether its "within the last 24 hours" posting date could be
-      independently <span class="confirmed">confirmed</span> or is <span class="caveat">unverified</span>. Use the
-      buttons on each row to mark a posting <b>Interested</b>, <b>Applied</b>, or <b>Ignored</b> — this status is
-      saved in your browser's local storage, so it's private to your device/browser and survives page updates, but
-      won't sync across devices.
+      Every update searches LinkedIn/Indeed/Glassdoor and general job boards for postings matching the target
+      role families, locations, and seniority band, scores each one High → Low on interview likelihood, and
+      <b>adds</b> new qualifying postings below — nothing already tracked is deleted. Each posting shows whether
+      its "within the last 24 hours" posting date could be independently <span class="confirmed">confirmed</span>
+      or is <span class="caveat">unverified</span>. Use the buttons on each card to mark a posting
+      <b>Interested</b>, <b>Applied</b>, or <b>Ignored</b> — saved in your browser's local storage, so it
+      survives every refresh but is private to this device.
     </p>
   </details>
 
-  <div class="stats" id="stats"><!-- filled by JS --></div>
+  <div class="controls">
+    <div class="search-box">
+      <span class="icon">⌕</span>
+      <input type="text" id="search-input" placeholder="Search title, company, or location…" autocomplete="off">
+    </div>
+    <select id="sort-select">
+      <option value="fit">Sort: Best fit first</option>
+      <option value="new">Sort: Newest first</option>
+      <option value="company">Sort: Company A–Z</option>
+    </select>
+  </div>
 
   <div class="filters" id="filters"><!-- filled by JS --></div>
 
-  <div class="table-scroll">
-    <table>
-      <thead>
-        <tr>
-          <th>Fit</th>
-          <th>Role Family</th>
-          <th>Job Title</th>
-          <th>Company</th>
-          <th>Location</th>
-          <th>First Seen</th>
-          <th>Source</th>
-          <th>Rationale</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody id="tbody"><!-- filled by JS --></tbody>
-    </table>
-  </div>
+  <div class="job-grid" id="job-grid"><!-- filled by JS --></div>
 
-  <div class="empty-note" id="empty-note" style="display:none;">No postings match this filter.</div>
+  <div class="empty-note" id="empty-note" style="display:none;">No postings match your search/filter.</div>
 
-  <div class="empty-note" style="margin-top:20px;">
-    <b>Standing caveat:</b> Work-authorization status for a France-based candidate isn't specified — any role outside
-    France/EU (UK, Ireland, US, UAE, Switzerland, etc.) would need sponsorship/right-to-work confirmed before applying.
-    Postings aren't excluded for this reason alone, only flagged.
+  <div class="caveat-box">
+    <b>Standing caveat:</b> work-authorization status for a France-based candidate isn't specified — any role
+    outside France/EU (UK, Ireland, US, UAE, Switzerland, etc.) would need sponsorship/right-to-work confirmed
+    before applying. Postings aren't excluded for this reason alone, only flagged.
   </div>
 
   <footer class="foot">
-    Data lives in this page (embedded JSON, see source). Status marks (Interested/Applied/Ignored) live only in this
-    browser's local storage — they are not written back to the file.
+    Data lives in this page (embedded JSON, see source). Status marks live only in your browser's local storage.
   </footer>
 </div>
+
+<div id="toast"></div>
 
 <script id="jobs-db" type="application/json">
 [
@@ -364,6 +626,9 @@
   var RUN = JSON.parse(document.getElementById('run-meta').textContent);
   var STATUS_PREFIX = 'jqt_status_';
   var activeFilter = 'all';
+  var searchTerm = '';
+  var sortMode = 'fit';
+  var toastTimer = null;
 
   function getStatus(id) {
     try { return localStorage.getItem(STATUS_PREFIX + id) || ''; } catch (e) { return ''; }
@@ -373,7 +638,14 @@
       if (!val) { localStorage.removeItem(STATUS_PREFIX + id); }
       else { localStorage.setItem(STATUS_PREFIX + id, val); }
     } catch (e) {}
-    renderAll();
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.classList.remove('show'); }, 1800);
   }
 
   function scoreClass(score) {
@@ -389,6 +661,27 @@
     return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
   }
 
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, function (c) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
+    });
+  }
+
+  function animateCount(el, target) {
+    var start = 0;
+    var duration = 700;
+    var startTime = null;
+    function step(ts) {
+      if (!startTime) startTime = ts;
+      var progress = Math.min((ts - startTime) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(start + (target - start) * eased);
+      if (progress < 1) requestAnimationFrame(step);
+      else el.textContent = target;
+    }
+    requestAnimationFrame(step);
+  }
+
   function renderRunbar() {
     var el = document.getElementById('runbar');
     el.innerHTML =
@@ -396,97 +689,125 @@
       RUN.newTodayCount + ' new posting' + (RUN.newTodayCount === 1 ? '' : 's') + ' added on that run · ' +
       RUN.searchesRun + ' searches run · ' +
       RUN.confirmedTodayCount + ' confirmed ≤24h that day' +
-      (RUN.note ? '<br><span style="color:#555;">' + RUN.note + '</span>' : '');
+      (RUN.note ? '<span class="note">' + escapeHtml(RUN.note) + '</span>' : '');
   }
 
   function renderStats() {
     var total = JOBS.length;
     var newToday = JOBS.filter(function (j) { return j.firstSeen === RUN.runDate; }).length;
     var confirmed = JOBS.filter(function (j) { return j.dateConfidence === 'confirmed'; }).length;
-    var applied = 0, interested = 0, ignored = 0;
+    var applied = 0, interested = 0;
     JOBS.forEach(function (j) {
       var s = getStatus(j.id);
       if (s === 'applied') applied++;
       else if (s === 'interested') interested++;
-      else if (s === 'ignored') ignored++;
     });
     var stats = [
       ['Total tracked', total],
-      ['New (last run)', newToday],
-      ['Confirmed ≤24h (all-time)', confirmed],
+      ['New this run', newToday],
+      ['Confirmed ≤24h', confirmed],
       ['Interested', interested],
-      ['Applied', applied],
-      ['Ignored', ignored]
+      ['Applied', applied]
     ];
-    document.getElementById('stats').innerHTML = stats.map(function (s) {
-      return '<div class="stat"><b>' + s[1] + '</b>' + s[0] + '</div>';
+    var grid = document.getElementById('stats');
+    grid.innerHTML = stats.map(function (s) {
+      return '<div class="stat-card"><div class="num" data-target="' + s[1] + '">0</div><div class="label">' + s[0] + '</div></div>';
     }).join('');
+    Array.prototype.forEach.call(grid.querySelectorAll('.num'), function (el) {
+      animateCount(el, parseInt(el.getAttribute('data-target'), 10));
+    });
   }
 
   function renderFilters() {
+    var counts = { all: JOBS.length, new: 0, untouched: 0, interested: 0, applied: 0, ignored: 0 };
+    JOBS.forEach(function (j) {
+      var s = getStatus(j.id);
+      if (j.firstSeen === RUN.runDate) counts.new++;
+      if (!s) counts.untouched++;
+      else counts[s] = (counts[s] || 0) + 1;
+    });
     var opts = [
       ['all', 'All'],
-      ['new', 'New (last run)'],
+      ['new', 'New'],
       ['untouched', 'Untouched'],
       ['interested', 'Interested'],
       ['applied', 'Applied'],
       ['ignored', 'Ignored']
     ];
     document.getElementById('filters').innerHTML = opts.map(function (o) {
-      return '<button class="filter-btn' + (activeFilter === o[0] ? ' active' : '') + '" data-filter="' + o[0] + '">' + o[1] + '</button>';
+      return '<button class="filter-btn' + (activeFilter === o[0] ? ' active' : '') + '" data-filter="' + o[0] + '">' +
+        o[1] + '<span class="filter-count">' + (counts[o[0]] || 0) + '</span></button>';
     }).join('');
     Array.prototype.forEach.call(document.querySelectorAll('.filter-btn'), function (btn) {
       btn.addEventListener('click', function () {
         activeFilter = btn.getAttribute('data-filter');
-        renderAll();
+        renderFilters();
+        renderGrid();
       });
     });
   }
 
   function passesFilter(job) {
     var s = getStatus(job.id);
-    if (activeFilter === 'all') return true;
-    if (activeFilter === 'new') return job.firstSeen === RUN.runDate;
-    if (activeFilter === 'untouched') return !s;
-    return s === activeFilter;
+    var matchesFilter =
+      activeFilter === 'all' ? true :
+      activeFilter === 'new' ? job.firstSeen === RUN.runDate :
+      activeFilter === 'untouched' ? !s :
+      s === activeFilter;
+    if (!matchesFilter) return false;
+    if (!searchTerm) return true;
+    var haystack = (job.title + ' ' + job.company + ' ' + job.location + ' ' + job.roleFamily).toLowerCase();
+    return haystack.indexOf(searchTerm) !== -1;
   }
 
-  function renderTable() {
-    var sorted = JOBS.slice().sort(function (a, b) { return a.scoreRank - b.scoreRank; });
-    var visible = sorted.filter(passesFilter);
-    var tbody = document.getElementById('tbody');
+  function sortJobs(list) {
+    var copy = list.slice();
+    if (sortMode === 'fit') copy.sort(function (a, b) { return a.scoreRank - b.scoreRank; });
+    else if (sortMode === 'new') copy.sort(function (a, b) { return b.firstSeen.localeCompare(a.firstSeen) || a.scoreRank - b.scoreRank; });
+    else if (sortMode === 'company') copy.sort(function (a, b) { return a.company.localeCompare(b.company); });
+    return copy;
+  }
+
+  function renderGrid() {
+    var visible = sortJobs(JOBS.filter(passesFilter));
+    var grid = document.getElementById('job-grid');
     var emptyNote = document.getElementById('empty-note');
 
     if (visible.length === 0) {
-      tbody.innerHTML = '';
+      grid.innerHTML = '';
       emptyNote.style.display = 'block';
       return;
     }
     emptyNote.style.display = 'none';
 
-    tbody.innerHTML = visible.map(function (j) {
+    grid.innerHTML = visible.map(function (j, i) {
       var s = getStatus(j.id);
       var rowClass = s ? 'row-' + s : '';
       var isNew = j.firstSeen === RUN.runDate;
       var dateTag = j.dateConfidence === 'confirmed'
-        ? '<div class="confirmed">confirmed ≤24h</div>'
-        : '<div class="caveat">unverified</div>';
+        ? '<span class="date-tag confirmed">confirmed ≤24h</span>'
+        : '<span class="date-tag caveat">unverified date</span>';
 
-      return '<tr class="' + rowClass + '">' +
-        '<td><span class="score ' + scoreClass(j.score) + '">' + j.score + '</span></td>' +
-        '<td><span class="badge">' + j.roleFamily + '</span></td>' +
-        '<td>' + j.title + (isNew ? '<span class="badge-new">NEW</span>' : '') + '</td>' +
-        '<td>' + j.company + '</td>' +
-        '<td>' + j.location + '</td>' +
-        '<td>' + fmtDate(j.firstSeen) + dateTag + '</td>' +
-        '<td><a href="' + j.sourceUrl + '" target="_blank" rel="noopener">Listing</a></td>' +
-        '<td>' + j.rationale + '</td>' +
-        '<td><div class="status-controls">' +
-          '<button class="status-btn sel-interested' + (s === 'interested' ? ' active' : '') + '" data-id="' + j.id + '" data-status="interested">★ Interested</button>' +
-          '<button class="status-btn sel-applied' + (s === 'applied' ? ' active' : '') + '" data-id="' + j.id + '" data-status="applied">✓ Applied</button>' +
-          '<button class="status-btn sel-ignored' + (s === 'ignored' ? ' active' : '') + '" data-id="' + j.id + '" data-status="ignored">✕ Ignore</button>' +
-        '</div></td>' +
-      '</tr>';
+      return '<div class="job-card ' + rowClass + '" style="animation-delay:' + Math.min(i * 0.03, 0.3) + 's">' +
+        '<div class="card-top">' +
+          '<span class="score ' + scoreClass(j.score) + '">' + escapeHtml(j.score) + '</span>' +
+          '<span class="badge">' + escapeHtml(j.roleFamily) + '</span>' +
+          (isNew ? '<span class="badge-new">NEW</span>' : '') +
+          dateTag +
+        '</div>' +
+        '<h3 class="card-title">' + escapeHtml(j.title) + '</h3>' +
+        '<div class="card-meta">' + escapeHtml(j.company) + '<span class="dot">·</span>' + escapeHtml(j.location) +
+          '<span class="dot">·</span><a href="' + j.sourceUrl + '" target="_blank" rel="noopener">View listing ↗</a></div>' +
+        '<p class="card-rationale">' + escapeHtml(j.rationale) + '</p>' +
+        '<div class="card-bottom">' +
+          '<div class="first-seen">First seen ' + fmtDate(j.firstSeen) + '</div>' +
+          '<div class="status-controls">' +
+            '<button class="status-btn sel-interested' + (s === 'interested' ? ' active' : '') + '" data-id="' + j.id + '" data-status="interested">★ Interested</button>' +
+            '<button class="status-btn sel-applied' + (s === 'applied' ? ' active' : '') + '" data-id="' + j.id + '" data-status="applied">✓ Applied</button>' +
+            '<button class="status-btn sel-ignored' + (s === 'ignored' ? ' active' : '') + '" data-id="' + j.id + '" data-status="ignored">✕ Ignore</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
     }).join('');
 
     Array.prototype.forEach.call(document.querySelectorAll('.status-btn'), function (btn) {
@@ -494,19 +815,30 @@
         var id = btn.getAttribute('data-id');
         var val = btn.getAttribute('data-status');
         var current = getStatus(id);
-        setStatus(id, current === val ? '' : val);
+        var next = current === val ? '' : val;
+        setStatus(id, next);
+        var label = next ? (next.charAt(0).toUpperCase() + next.slice(1)) : 'Cleared';
+        showToast(next ? 'Marked as ' + label : 'Status cleared');
+        renderStats();
+        renderFilters();
+        renderGrid();
       });
     });
   }
 
-  function renderAll() {
-    renderRunbar();
-    renderStats();
-    renderFilters();
-    renderTable();
-  }
+  document.getElementById('search-input').addEventListener('input', function (e) {
+    searchTerm = e.target.value.trim().toLowerCase();
+    renderGrid();
+  });
+  document.getElementById('sort-select').addEventListener('change', function (e) {
+    sortMode = e.target.value;
+    renderGrid();
+  });
 
-  renderAll();
+  renderRunbar();
+  renderStats();
+  renderFilters();
+  renderGrid();
 })();
 </script>
 </body>
