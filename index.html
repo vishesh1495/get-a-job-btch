@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Qualified Jobs Tracker — Vishesh Teng</title>
+<meta name="description" content="Running tracker of qualifying job postings for Vishesh Teng — Product Manager, Technical Program/Digital Transformation Manager, Strategy Consultant, and QA/Test Automation Manager roles.">
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #f7f7f8;
+    color: #1a1a1a;
+    margin: 0;
+    padding: 24px;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  .sub { color: #555; font-size: 14px; margin-bottom: 18px; }
+
+  .runbar {
+    background: #eef4ff;
+    border: 1px solid #cddcf7;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+
+  details.legend {
+    background: #fff;
+    border: 1px solid #e3e3e6;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12.5px;
+    color: #555;
+    margin-bottom: 18px;
+  }
+  details.legend summary { cursor: pointer; font-weight: 600; color: #333; }
+  details.legend p { margin: 8px 0 0; line-height: 1.5; }
+
+  .stats {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .stat {
+    background: #fff;
+    border: 1px solid #e3e3e6;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+  .stat b { display: block; font-size: 18px; }
+
+  .filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    border: 1px solid #d6d6da;
+    background: #fff;
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 12.5px;
+    cursor: pointer;
+    color: #333;
+  }
+  .filter-btn.active {
+    background: #1a1a1a;
+    color: #fff;
+    border-color: #1a1a1a;
+  }
+
+  .table-scroll { overflow-x: auto; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 13px;
+    min-width: 900px;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 10px;
+    border-bottom: 1px solid #ececee;
+    vertical-align: top;
+  }
+  th {
+    background: #fafafa;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #666;
+  }
+  tr.row-ignored { opacity: 0.45; }
+  tr.row-applied { background: #f3faf3; }
+  tr.row-interested { background: #fff9ef; }
+
+  .score {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .score-high { background: #d9f2df; color: #1e6b34; }
+  .score-medhigh { background: #e3f2e0; color: #3c6b2f; }
+  .score-med { background: #fff3cd; color: #7a5c00; }
+  .score-lowmed { background: #f1e9dd; color: #7a5c1a; }
+  .score-low { background: #f1f1f3; color: #555; }
+
+  .badge {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 4px;
+    font-size: 10px;
+    background: #e8eefc;
+    color: #2952a3;
+    margin-bottom: 4px;
+    white-space: nowrap;
+  }
+  .badge-new {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    background: #2952a3;
+    color: #fff;
+    margin-left: 6px;
+    font-weight: 600;
+  }
+  .caveat { color: #9a5b00; font-size: 11.5px; }
+  .confirmed { color: #1e6b34; font-size: 11.5px; }
+  a { color: #2952a3; }
+
+  .status-controls { display: flex; gap: 4px; flex-wrap: wrap; }
+  .status-btn {
+    border: 1px solid #d6d6da;
+    background: #fff;
+    border-radius: 6px;
+    padding: 3px 7px;
+    font-size: 11px;
+    cursor: pointer;
+    color: #333;
+    white-space: nowrap;
+  }
+  .status-btn.sel-interested.active { background: #f7c948; border-color: #f7c948; color: #4a3600; }
+  .status-btn.sel-applied.active { background: #3c9d4e; border-color: #3c9d4e; color: #fff; }
+  .status-btn.sel-ignored.active { background: #999; border-color: #999; color: #fff; }
+
+  .empty-note {
+    background: #fff;
+    border: 1px solid #e3e3e6;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 13px;
+    color: #555;
+    margin-top: 16px;
+  }
+  footer.foot {
+    margin-top: 18px;
+    font-size: 11.5px;
+    color: #888;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Daily Qualified Jobs — Tracker</h1>
+  <div class="sub">Candidate: Vishesh Teng · Static tracker — edit the JSON block below to add/update postings</div>
+
+  <div class="runbar" id="runbar"><!-- filled by JS --></div>
+
+  <details class="legend">
+    <summary>How this tracker works</summary>
+    <p>
+      This page lists qualifying job postings (Product Manager, Technical Program/Digital Transformation Manager,
+      Strategy Consultant, QA/Test Automation Manager) scored High → Low on interview likelihood. New postings are
+      added over time by editing the <code>jobs-db</code> JSON block in this file's source and re-deploying — nothing
+      is removed automatically. Each posting shows whether its "within the last 24 hours" posting date could be
+      independently <span class="confirmed">confirmed</span> or is <span class="caveat">unverified</span>. Use the
+      buttons on each row to mark a posting <b>Interested</b>, <b>Applied</b>, or <b>Ignored</b> — this status is
+      saved in your browser's local storage, so it's private to your device/browser and survives page updates, but
+      won't sync across devices.
+    </p>
+  </details>
+
+  <div class="stats" id="stats"><!-- filled by JS --></div>
+
+  <div class="filters" id="filters"><!-- filled by JS --></div>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>Fit</th>
+          <th>Role Family</th>
+          <th>Job Title</th>
+          <th>Company</th>
+          <th>Location</th>
+          <th>First Seen</th>
+          <th>Source</th>
+          <th>Rationale</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"><!-- filled by JS --></tbody>
+    </table>
+  </div>
+
+  <div class="empty-note" id="empty-note" style="display:none;">No postings match this filter.</div>
+
+  <div class="empty-note" style="margin-top:20px;">
+    <b>Standing caveat:</b> Work-authorization status for a France-based candidate isn't specified — any role outside
+    France/EU (UK, Ireland, US, UAE, Switzerland, etc.) would need sponsorship/right-to-work confirmed before applying.
+    Postings aren't excluded for this reason alone, only flagged.
+  </div>
+
+  <footer class="foot">
+    Data lives in this page (embedded JSON, see source). Status marks (Interested/Applied/Ignored) live only in this
+    browser's local storage — they are not written back to the file.
+  </footer>
+</div>
+
+<script id="jobs-db" type="application/json">
+[
+  {
+    "id": "bil-tom-delivery-manager-luxembourg",
+    "roleFamily": "Strategy Consultant",
+    "title": "TOM Delivery Manager (M/F)",
+    "company": "Banque Internationale à Luxembourg (BIL)",
+    "location": "Luxembourg",
+    "score": "Medium-High",
+    "scoreRank": 2,
+    "dateConfidence": "unverified",
+    "sourceUrl": "https://lu.linkedin.com/jobs/view/tom-delivery-manager-m-f-at-banque-internationale-%C3%A0-luxembourg-bil-3865383118",
+    "rationale": "Directly matches candidate's target operating model (TOM) design and delivery-management background in a regulated banking environment; requires French+English fluency, which candidate has (working French).",
+    "firstSeen": "2026-07-30",
+    "lastSeenRun": "2026-07-30"
+  },
+  {
+    "id": "kpmg-ireland-cloud-strategy-consultant-dublin",
+    "roleFamily": "Strategy Consultant",
+    "title": "Cloud Strategy Consultant",
+    "company": "KPMG Ireland",
+    "location": "Dublin, Ireland",
+    "score": "Medium-High",
+    "scoreRank": 2,
+    "dateConfidence": "unverified",
+    "sourceUrl": "https://ie.linkedin.com/jobs/view/cloud-strategy-consultant-at-kpmg-ireland-3617933261",
+    "rationale": "Big-4 strategy consulting role aligns with candidate's MBA consulting projects and cloud/digital transformation delivery experience; Ireland work authorization for a France-based EU mover would need confirmation.",
+    "firstSeen": "2026-07-30",
+    "lastSeenRun": "2026-07-30"
+  },
+  {
+    "id": "telindus-luxembourg-senior-tpm",
+    "roleFamily": "TPM / Digital Transformation",
+    "title": "Senior Technical Program Manager",
+    "company": "Telindus Luxembourg",
+    "location": "Luxembourg",
+    "score": "Medium-High",
+    "scoreRank": 2,
+    "dateConfidence": "unverified",
+    "sourceUrl": "https://lu.linkedin.com/jobs/view/senior-technical-program-manager-at-telindus-luxembourg-3367091576",
+    "rationale": "Senior TPM band matches candidate's ~8 years and multi-vendor/cloud delivery experience; private-cloud domain is adjacent to but not identical to candidate's fintech/SaaS background.",
+    "firstSeen": "2026-07-30",
+    "lastSeenRun": "2026-07-30"
+  },
+  {
+    "id": "pwc-uk-strategy-ma-consultant-manager-london",
+    "roleFamily": "Strategy Consultant",
+    "title": "Strategy and M&A Consultant (IPS – Strategy&) – Manager",
+    "company": "PwC UK",
+    "location": "London, UK",
+    "score": "Medium",
+    "scoreRank": 3,
+    "dateConfidence": "unverified",
+    "sourceUrl": "https://uk.linkedin.com/jobs/view/strategy-and-m-a-consultant-ips-strategy-manager-at-pwc-uk-3325165079",
+    "rationale": "Manager-level strategy consulting fits MBA + consulting project background well; M&A-specific focus is a partial mismatch since candidate's consulting work is more digital/TOM strategy than deal-side M&A.",
+    "firstSeen": "2026-07-30",
+    "lastSeenRun": "2026-07-30"
+  },
+  {
+    "id": "bankin-product-manager-paris",
+    "roleFamily": "Product Manager",
+    "title": "Product Manager (H/F/X)",
+    "company": "Bankin'",
+    "location": "Paris, France",
+    "score": "Medium",
+    "scoreRank": 3,
+    "dateConfidence": "unverified",
+    "sourceUrl": "https://www.linkedin.com/jobs/view/product-manager-h-f-x-at-bankin-%E2%80%8B-3036057550",
+    "rationale": "Fintech scale-up PM role in candidate's home market (Paris) and industry (fintech), overlapping with prior fintech platform product/delivery ownership; seniority level of the specific opening is unconfirmed.",
+    "firstSeen": "2026-07-30",
+    "lastSeenRun": "2026-07-30"
+  },
+  {
+    "id": "britbox-qa-manager-london",
+    "roleFamily": "QA / Test Automation Manager",
+    "title": "QA Manager",
+    "company": "BritBox International",
+    "location": "London, UK",
+    "score": "Medium",
+    "scoreRank": 3,
+    "dateConfidence": "unverified",
+    "sourceUrl": "https://www.linkedin.com/jobs/view/4410740453/",
+    "rationale": "QA Manager level matches candidate's SDET/QA Lead/Release Manager background (DeCurtis); role reportedly involves AI-driven testing tools, aligning with candidate's automation/test-tooling experience.",
+    "firstSeen": "2026-07-30",
+    "lastSeenRun": "2026-07-30"
+  },
+  {
+    "id": "bdo-ireland-consultant-strategy-business-dublin",
+    "roleFamily": "Strategy Consultant",
+    "title": "Consultant – Strategy and Business",
+    "company": "BDO Ireland",
+    "location": "Dublin, Ireland",
+    "score": "Medium",
+    "scoreRank": 3,
+    "dateConfidence": "unverified",
+    "sourceUrl": "https://ie.linkedin.com/jobs/view/consultant-strategy-and-business-at-bdo-ireland-3439385063",
+    "rationale": "Strategy consulting fit is solid, but title suggests a more junior consultant band than candidate's ~8 years; would need to confirm actual seniority/scope before applying.",
+    "firstSeen": "2026-07-30",
+    "lastSeenRun": "2026-07-30"
+  },
+  {
+    "id": "capgemini-test-automation-lead-remote-us",
+    "roleFamily": "QA / Test Automation Manager",
+    "title": "Test Automation Lead (Remote)",
+    "company": "Capgemini",
+    "location": "Remote, United States",
+    "score": "Low-Medium",
+    "scoreRank": 4,
+    "dateConfidence": "unverified",
+    "sourceUrl": "https://www.linkedin.com/jobs/view/test-automation-lead-remote-at-capgemini-4303081393",
+    "rationale": "Test automation domain fits candidate's SDET/QA background, but \"Lead\" (not \"Manager\") suggests an IC-level scope, and US remote work would require confirming sponsorship/work-authorization eligibility.",
+    "firstSeen": "2026-07-30",
+    "lastSeenRun": "2026-07-30"
+  }
+]
+</script>
+
+<script id="run-meta" type="application/json">
+{
+  "runDate": "2026-07-30",
+  "newTodayCount": 8,
+  "searchesRun": 15,
+  "confirmedTodayCount": 0,
+  "note": "0 postings today could be independently confirmed as posted within 24 hours; all 8 added today are best-fit leads with unverified posting dates. See legend above for methodology."
+}
+</script>
+
+<script>
+(function () {
+  var JOBS = JSON.parse(document.getElementById('jobs-db').textContent);
+  var RUN = JSON.parse(document.getElementById('run-meta').textContent);
+  var STATUS_PREFIX = 'jqt_status_';
+  var activeFilter = 'all';
+
+  function getStatus(id) {
+    try { return localStorage.getItem(STATUS_PREFIX + id) || ''; } catch (e) { return ''; }
+  }
+  function setStatus(id, val) {
+    try {
+      if (!val) { localStorage.removeItem(STATUS_PREFIX + id); }
+      else { localStorage.setItem(STATUS_PREFIX + id, val); }
+    } catch (e) {}
+    renderAll();
+  }
+
+  function scoreClass(score) {
+    if (score === 'High') return 'score-high';
+    if (score === 'Medium-High') return 'score-medhigh';
+    if (score === 'Medium') return 'score-med';
+    if (score === 'Low-Medium') return 'score-lowmed';
+    return 'score-low';
+  }
+
+  function fmtDate(iso) {
+    var d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+  }
+
+  function renderRunbar() {
+    var el = document.getElementById('runbar');
+    el.innerHTML =
+      '<b>Last updated: ' + fmtDate(RUN.runDate) + '</b> · ' +
+      RUN.newTodayCount + ' new posting' + (RUN.newTodayCount === 1 ? '' : 's') + ' added on that run · ' +
+      RUN.searchesRun + ' searches run · ' +
+      RUN.confirmedTodayCount + ' confirmed ≤24h that day' +
+      (RUN.note ? '<br><span style="color:#555;">' + RUN.note + '</span>' : '');
+  }
+
+  function renderStats() {
+    var total = JOBS.length;
+    var newToday = JOBS.filter(function (j) { return j.firstSeen === RUN.runDate; }).length;
+    var confirmed = JOBS.filter(function (j) { return j.dateConfidence === 'confirmed'; }).length;
+    var applied = 0, interested = 0, ignored = 0;
+    JOBS.forEach(function (j) {
+      var s = getStatus(j.id);
+      if (s === 'applied') applied++;
+      else if (s === 'interested') interested++;
+      else if (s === 'ignored') ignored++;
+    });
+    var stats = [
+      ['Total tracked', total],
+      ['New (last run)', newToday],
+      ['Confirmed ≤24h (all-time)', confirmed],
+      ['Interested', interested],
+      ['Applied', applied],
+      ['Ignored', ignored]
+    ];
+    document.getElementById('stats').innerHTML = stats.map(function (s) {
+      return '<div class="stat"><b>' + s[1] + '</b>' + s[0] + '</div>';
+    }).join('');
+  }
+
+  function renderFilters() {
+    var opts = [
+      ['all', 'All'],
+      ['new', 'New (last run)'],
+      ['untouched', 'Untouched'],
+      ['interested', 'Interested'],
+      ['applied', 'Applied'],
+      ['ignored', 'Ignored']
+    ];
+    document.getElementById('filters').innerHTML = opts.map(function (o) {
+      return '<button class="filter-btn' + (activeFilter === o[0] ? ' active' : '') + '" data-filter="' + o[0] + '">' + o[1] + '</button>';
+    }).join('');
+    Array.prototype.forEach.call(document.querySelectorAll('.filter-btn'), function (btn) {
+      btn.addEventListener('click', function () {
+        activeFilter = btn.getAttribute('data-filter');
+        renderAll();
+      });
+    });
+  }
+
+  function passesFilter(job) {
+    var s = getStatus(job.id);
+    if (activeFilter === 'all') return true;
+    if (activeFilter === 'new') return job.firstSeen === RUN.runDate;
+    if (activeFilter === 'untouched') return !s;
+    return s === activeFilter;
+  }
+
+  function renderTable() {
+    var sorted = JOBS.slice().sort(function (a, b) { return a.scoreRank - b.scoreRank; });
+    var visible = sorted.filter(passesFilter);
+    var tbody = document.getElementById('tbody');
+    var emptyNote = document.getElementById('empty-note');
+
+    if (visible.length === 0) {
+      tbody.innerHTML = '';
+      emptyNote.style.display = 'block';
+      return;
+    }
+    emptyNote.style.display = 'none';
+
+    tbody.innerHTML = visible.map(function (j) {
+      var s = getStatus(j.id);
+      var rowClass = s ? 'row-' + s : '';
+      var isNew = j.firstSeen === RUN.runDate;
+      var dateTag = j.dateConfidence === 'confirmed'
+        ? '<div class="confirmed">confirmed ≤24h</div>'
+        : '<div class="caveat">unverified</div>';
+
+      return '<tr class="' + rowClass + '">' +
+        '<td><span class="score ' + scoreClass(j.score) + '">' + j.score + '</span></td>' +
+        '<td><span class="badge">' + j.roleFamily + '</span></td>' +
+        '<td>' + j.title + (isNew ? '<span class="badge-new">NEW</span>' : '') + '</td>' +
+        '<td>' + j.company + '</td>' +
+        '<td>' + j.location + '</td>' +
+        '<td>' + fmtDate(j.firstSeen) + dateTag + '</td>' +
+        '<td><a href="' + j.sourceUrl + '" target="_blank" rel="noopener">Listing</a></td>' +
+        '<td>' + j.rationale + '</td>' +
+        '<td><div class="status-controls">' +
+          '<button class="status-btn sel-interested' + (s === 'interested' ? ' active' : '') + '" data-id="' + j.id + '" data-status="interested">★ Interested</button>' +
+          '<button class="status-btn sel-applied' + (s === 'applied' ? ' active' : '') + '" data-id="' + j.id + '" data-status="applied">✓ Applied</button>' +
+          '<button class="status-btn sel-ignored' + (s === 'ignored' ? ' active' : '') + '" data-id="' + j.id + '" data-status="ignored">✕ Ignore</button>' +
+        '</div></td>' +
+      '</tr>';
+    }).join('');
+
+    Array.prototype.forEach.call(document.querySelectorAll('.status-btn'), function (btn) {
+      btn.addEventListener('click', function () {
+        var id = btn.getAttribute('data-id');
+        var val = btn.getAttribute('data-status');
+        var current = getStatus(id);
+        setStatus(id, current === val ? '' : val);
+      });
+    });
+  }
+
+  function renderAll() {
+    renderRunbar();
+    renderStats();
+    renderFilters();
+    renderTable();
+  }
+
+  renderAll();
+})();
+</script>
+</body>
+</html>
