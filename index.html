@@ -453,12 +453,12 @@
     <summary>How this tracker works</summary>
     <p>
       Every update searches LinkedIn/Indeed/Glassdoor and general job boards for postings matching the target
-      role families, locations, and seniority band, scores each one High → Low on interview likelihood, and
-      <b>adds</b> new qualifying postings below — nothing already tracked is deleted. Each posting shows whether
-      its "within the last 24 hours" posting date could be independently <span class="confirmed">confirmed</span>
-      or is <span class="caveat">unverified</span>. Use the buttons on each card to mark a posting
-      <b>Interested</b>, <b>Applied</b>, or <b>Ignored</b> — saved in your browser's local storage, so it
-      survives every refresh but is private to this device.
+      role families, locations, and seniority band (posted within the last 7 days), scores each one High → Low
+      on interview likelihood, and <b>adds</b> new qualifying postings below. A posting is only kept if its date
+      and active/not-expired status could be independently <span class="confirmed">confirmed</span> by opening
+      the actual listing — otherwise it's marked <span class="caveat">unverified</span> or dropped. Use the
+      buttons on each card to mark a posting <b>Interested</b>, <b>Applied</b>, or <b>Ignored</b> — saved in
+      your browser's local storage, so it survives every refresh but is private to this device.
     </p>
   </details>
 
@@ -496,114 +496,156 @@
 <script id="jobs-db" type="application/json">
 [
   {
-    "id": "bil-tom-delivery-manager-luxembourg",
-    "roleFamily": "Strategy Consultant",
-    "title": "TOM Delivery Manager (M/F)",
-    "company": "Banque Internationale à Luxembourg (BIL)",
-    "location": "Luxembourg",
-    "score": "Medium-High",
-    "scoreRank": 2,
-    "dateConfidence": "unverified",
-    "sourceUrl": "https://lu.linkedin.com/jobs/view/tom-delivery-manager-m-f-at-banque-internationale-%C3%A0-luxembourg-bil-3865383118",
-    "rationale": "Directly matches candidate's target operating model (TOM) design and delivery-management background in a regulated banking environment; requires French+English fluency, which candidate has (working French).",
-    "firstSeen": "2026-07-30",
-    "lastSeenRun": "2026-07-30"
-  },
-  {
-    "id": "kpmg-ireland-cloud-strategy-consultant-dublin",
-    "roleFamily": "Strategy Consultant",
-    "title": "Cloud Strategy Consultant",
-    "company": "KPMG Ireland",
-    "location": "Dublin, Ireland",
-    "score": "Medium-High",
-    "scoreRank": 2,
-    "dateConfidence": "unverified",
-    "sourceUrl": "https://ie.linkedin.com/jobs/view/cloud-strategy-consultant-at-kpmg-ireland-3617933261",
-    "rationale": "Big-4 strategy consulting role aligns with candidate's MBA consulting projects and cloud/digital transformation delivery experience; Ireland work authorization for a France-based EU mover would need confirmation.",
-    "firstSeen": "2026-07-30",
-    "lastSeenRun": "2026-07-30"
-  },
-  {
-    "id": "telindus-luxembourg-senior-tpm",
+    "id": "mastercard-lead-tpm-dublin",
     "roleFamily": "TPM / Digital Transformation",
-    "title": "Senior Technical Program Manager",
-    "company": "Telindus Luxembourg",
-    "location": "Luxembourg",
-    "score": "Medium-High",
-    "scoreRank": 2,
-    "dateConfidence": "unverified",
-    "sourceUrl": "https://lu.linkedin.com/jobs/view/senior-technical-program-manager-at-telindus-luxembourg-3367091576",
-    "rationale": "Senior TPM band matches candidate's ~8 years and multi-vendor/cloud delivery experience; private-cloud domain is adjacent to but not identical to candidate's fintech/SaaS background.",
+    "title": "Lead Technical Program Manager",
+    "company": "Mastercard",
+    "location": "Dublin, Ireland (Hybrid)",
+    "score": "High",
+    "scoreRank": 1,
+    "dateConfidence": "confirmed",
+    "sourceUrl": "https://www.linkedin.com/jobs/view/4441832179/",
+    "rationale": "Confirmed live on LinkedIn (posted 5 days ago, 65 applicants, not expired); Mastercard's payments/fintech domain is a near-exact match to candidate's Network International fintech-platform delivery background, and Lead TPM level fits ~8 years experience well.",
     "firstSeen": "2026-07-30",
     "lastSeenRun": "2026-07-30"
   },
   {
-    "id": "pwc-uk-strategy-ma-consultant-manager-london",
+    "id": "meridianlink-sr-tpm-ai-remote-us",
+    "roleFamily": "TPM / Digital Transformation",
+    "title": "Sr. Technical Program Manager - AI",
+    "company": "MeridianLink",
+    "location": "Remote, United States",
+    "score": "High",
+    "scoreRank": 1,
+    "dateConfidence": "confirmed",
+    "sourceUrl": "https://www.linkedin.com/jobs/view/4437482316/",
+    "rationale": "Confirmed live (reposted 1 day ago, 100+ applicants, not expired); MeridianLink builds lending/decisioning software for banks and credit unions — strong fintech SaaS overlap with candidate's background; US remote would need work-authorization/sponsorship confirmation for a France-based candidate.",
+    "firstSeen": "2026-07-30",
+    "lastSeenRun": "2026-07-30"
+  },
+  {
+    "id": "singulier-data-strategy-consultant-paris",
     "roleFamily": "Strategy Consultant",
-    "title": "Strategy and M&A Consultant (IPS – Strategy&) – Manager",
-    "company": "PwC UK",
-    "location": "London, UK",
-    "score": "Medium",
-    "scoreRank": 3,
-    "dateConfidence": "unverified",
-    "sourceUrl": "https://uk.linkedin.com/jobs/view/strategy-and-m-a-consultant-ips-strategy-manager-at-pwc-uk-3325165079",
-    "rationale": "Manager-level strategy consulting fits MBA + consulting project background well; M&A-specific focus is a partial mismatch since candidate's consulting work is more digital/TOM strategy than deal-side M&A.",
+    "title": "Data & Strategy Consultant",
+    "company": "SINGULIER",
+    "location": "Paris, France (Hybrid)",
+    "score": "High",
+    "scoreRank": 1,
+    "dateConfidence": "confirmed",
+    "sourceUrl": "https://www.linkedin.com/jobs/view/4427113003/",
+    "rationale": "Confirmed live (reposted 6 days ago, 100+ applicants, not expired); Paris-based data/AI strategy boutique directly matches candidate's home market, MBA consulting projects (Schneider Electric, Leroy Merlin), and data-driven decision-making skill set — no location caveat since it's based in France.",
     "firstSeen": "2026-07-30",
     "lastSeenRun": "2026-07-30"
   },
   {
-    "id": "bankin-product-manager-paris",
-    "roleFamily": "Product Manager",
-    "title": "Product Manager (H/F/X)",
-    "company": "Bankin'",
-    "location": "Paris, France",
-    "score": "Medium",
-    "scoreRank": 3,
-    "dateConfidence": "unverified",
-    "sourceUrl": "https://www.linkedin.com/jobs/view/product-manager-h-f-x-at-bankin-%E2%80%8B-3036057550",
-    "rationale": "Fintech scale-up PM role in candidate's home market (Paris) and industry (fintech), overlapping with prior fintech platform product/delivery ownership; seniority level of the specific opening is unconfirmed.",
+    "id": "siemens-senior-release-quality-manager-berlin",
+    "roleFamily": "QA / Test Automation Manager",
+    "title": "Senior Software Release & Quality Manager (F/M/D)",
+    "company": "Siemens Digital Industries Software",
+    "location": "Berlin, Germany (Hybrid)",
+    "score": "High",
+    "scoreRank": 1,
+    "dateConfidence": "confirmed",
+    "sourceUrl": "https://www.linkedin.com/jobs/view/4444380385/",
+    "rationale": "Confirmed live (posted 5 days ago, 46 applicants, not expired); Release & Quality Manager scope closely mirrors candidate's QA Lead/Release Manager track record at DeCurtis (70-80% defect reduction, faster release cadence); Germany is EU but work-authorization status should still be confirmed.",
     "firstSeen": "2026-07-30",
     "lastSeenRun": "2026-07-30"
   },
   {
-    "id": "britbox-qa-manager-london",
+    "id": "bitwarden-qa-manager-remote-us",
     "roleFamily": "QA / Test Automation Manager",
     "title": "QA Manager",
-    "company": "BritBox International",
-    "location": "London, UK",
-    "score": "Medium",
-    "scoreRank": 3,
-    "dateConfidence": "unverified",
-    "sourceUrl": "https://www.linkedin.com/jobs/view/4410740453/",
-    "rationale": "QA Manager level matches candidate's SDET/QA Lead/Release Manager background (DeCurtis); role reportedly involves AI-driven testing tools, aligning with candidate's automation/test-tooling experience.",
-    "firstSeen": "2026-07-30",
-    "lastSeenRun": "2026-07-30"
-  },
-  {
-    "id": "bdo-ireland-consultant-strategy-business-dublin",
-    "roleFamily": "Strategy Consultant",
-    "title": "Consultant – Strategy and Business",
-    "company": "BDO Ireland",
-    "location": "Dublin, Ireland",
-    "score": "Medium",
-    "scoreRank": 3,
-    "dateConfidence": "unverified",
-    "sourceUrl": "https://ie.linkedin.com/jobs/view/consultant-strategy-and-business-at-bdo-ireland-3439385063",
-    "rationale": "Strategy consulting fit is solid, but title suggests a more junior consultant band than candidate's ~8 years; would need to confirm actual seniority/scope before applying.",
-    "firstSeen": "2026-07-30",
-    "lastSeenRun": "2026-07-30"
-  },
-  {
-    "id": "capgemini-test-automation-lead-remote-us",
-    "roleFamily": "QA / Test Automation Manager",
-    "title": "Test Automation Lead (Remote)",
-    "company": "Capgemini",
+    "company": "Bitwarden",
     "location": "Remote, United States",
+    "score": "High",
+    "scoreRank": 1,
+    "dateConfidence": "confirmed",
+    "sourceUrl": "https://www.linkedin.com/jobs/view/4426402468/",
+    "rationale": "Confirmed live (reposted 1 day ago, 100+ applicants, not expired) — note: this LinkedIn account already has an application submitted to this posting (18 hours ago); QA Manager level and security-software domain fit candidate's SDET/QA background well; US remote would need sponsorship confirmation.",
+    "firstSeen": "2026-07-30",
+    "lastSeenRun": "2026-07-30"
+  },
+  {
+    "id": "finom-senior-product-manager-remote-eu",
+    "roleFamily": "Product Manager",
+    "title": "Senior Product Manager",
+    "company": "Finom",
+    "location": "Remote (European Union)",
+    "score": "High",
+    "scoreRank": 1,
+    "dateConfidence": "confirmed",
+    "sourceUrl": "https://www.linkedin.com/jobs/view/4446096204/",
+    "rationale": "Confirmed live (posted 11 hours ago, 62 applicants, not expired); Finom is an SME business-banking/neobank platform — close fintech domain match to candidate's Network International experience, fully remote within the EU covers France.",
+    "firstSeen": "2026-07-30",
+    "lastSeenRun": "2026-07-30"
+  },
+  {
+    "id": "stonebranch-senior-pm-it-automation-remote-eu",
+    "roleFamily": "Product Manager",
+    "title": "Senior Product Manager - Hybrid IT Automation",
+    "company": "Stonebranch",
+    "location": "Remote (European Union)",
+    "score": "Medium-High",
+    "scoreRank": 2,
+    "dateConfidence": "confirmed",
+    "sourceUrl": "https://www.linkedin.com/jobs/view/4444189142/",
+    "rationale": "Confirmed live (posted 5 hours ago, not expired); IT workload-automation platform aligns with candidate's automation tooling background (Terraform/Ansible/n8n) and delivery experience, though it's less directly fintech/SaaS than other options here.",
+    "firstSeen": "2026-07-30",
+    "lastSeenRun": "2026-07-30"
+  },
+  {
+    "id": "nvidia-senior-software-tpm-remote-us",
+    "roleFamily": "TPM / Digital Transformation",
+    "title": "Senior Software Technical Program Manager",
+    "company": "NVIDIA",
+    "location": "Remote (California, United States)",
+    "score": "Medium-High",
+    "scoreRank": 2,
+    "dateConfidence": "confirmed",
+    "sourceUrl": "https://www.linkedin.com/jobs/view/4446880764/",
+    "rationale": "Confirmed live (posted 2 hours ago, not expired); strong TPM/delivery skill match at a top-tier tech employer, though domain (AI hardware/software) is a step away from candidate's fintech/SaaS focus; US remote needs sponsorship confirmation.",
+    "firstSeen": "2026-07-30",
+    "lastSeenRun": "2026-07-30"
+  },
+  {
+    "id": "smartedge-senior-qa-test-manager-dublin",
+    "roleFamily": "QA / Test Automation Manager",
+    "title": "Senior QA & Test Manager",
+    "company": "Smartedge Solutions",
+    "location": "Dublin, Ireland (Hybrid, Contract)",
+    "score": "Medium-High",
+    "scoreRank": 2,
+    "dateConfidence": "confirmed",
+    "sourceUrl": "https://www.linkedin.com/jobs/view/4443227984/",
+    "rationale": "Confirmed live (posted 1 day ago, 99 applicants, actively reviewing, not expired); strong QA/Test Manager fit and Ireland location, but listed as a contract role rather than permanent, which may not match candidate's preference.",
+    "firstSeen": "2026-07-30",
+    "lastSeenRun": "2026-07-30"
+  },
+  {
+    "id": "emirates-technical-pm-ai-cv-robotics-dubai",
+    "roleFamily": "Product Manager",
+    "title": "Technical Product Manager - AI, Computer Vision, and Robotics",
+    "company": "Emirates",
+    "location": "Dubai, United Arab Emirates (On-site)",
+    "score": "Medium",
+    "scoreRank": 3,
+    "dateConfidence": "confirmed",
+    "sourceUrl": "https://www.linkedin.com/jobs/view/4444140855/",
+    "rationale": "Confirmed live (posted 9 hours ago, 49 applicants, not expired); candidate has direct Dubai/MEA market experience (Network International), which helps, but AI/computer-vision/robotics is a specialized technical domain outside candidate's stated expertise.",
+    "firstSeen": "2026-07-30",
+    "lastSeenRun": "2026-07-30"
+  },
+  {
+    "id": "mercor-strategy-consultant-remote-germany",
+    "roleFamily": "Strategy Consultant",
+    "title": "Strategy Consultant - Fully Remote",
+    "company": "Mercor",
+    "location": "Remote (Germany)",
     "score": "Low-Medium",
     "scoreRank": 4,
-    "dateConfidence": "unverified",
-    "sourceUrl": "https://www.linkedin.com/jobs/view/test-automation-lead-remote-at-capgemini-4303081393",
-    "rationale": "Test automation domain fits candidate's SDET/QA background, but \"Lead\" (not \"Manager\") suggests an IC-level scope, and US remote work would require confirming sponsorship/work-authorization eligibility.",
+    "dateConfidence": "confirmed",
+    "sourceUrl": "https://www.linkedin.com/jobs/view/4446575225/",
+    "rationale": "Confirmed live (posted 18 hours ago, not expired); general strategy-consulting fit is reasonable, but this is listed as a part-time, $95/hr contract engagement via a gig-staffing marketplace rather than a permanent full-time role.",
     "firstSeen": "2026-07-30",
     "lastSeenRun": "2026-07-30"
   }
@@ -613,10 +655,10 @@
 <script id="run-meta" type="application/json">
 {
   "runDate": "2026-07-30",
-  "newTodayCount": 8,
-  "searchesRun": 15,
-  "confirmedTodayCount": 0,
-  "note": "0 postings today could be independently confirmed as posted within 24 hours; all 8 added today are best-fit leads with unverified posting dates. See legend above for methodology."
+  "newTodayCount": 11,
+  "searchesRun": 9,
+  "confirmedTodayCount": 11,
+  "note": "Full refresh: the previous 8 listings turned out to be expired/stale, so they were removed rather than kept. These 11 replacements were found via live LinkedIn search (7-day filter) and each one was opened individually to confirm it's still accepting applications (not expired) — all 11 are confirmed active as of this run."
 }
 </script>
 
@@ -688,7 +730,7 @@
       '<b>Last updated: ' + fmtDate(RUN.runDate) + '</b> · ' +
       RUN.newTodayCount + ' new posting' + (RUN.newTodayCount === 1 ? '' : 's') + ' added on that run · ' +
       RUN.searchesRun + ' searches run · ' +
-      RUN.confirmedTodayCount + ' confirmed ≤24h that day' +
+      RUN.confirmedTodayCount + ' confirmed active/not-expired' +
       (RUN.note ? '<span class="note">' + escapeHtml(RUN.note) + '</span>' : '');
   }
 
@@ -705,7 +747,7 @@
     var stats = [
       ['Total tracked', total],
       ['New this run', newToday],
-      ['Confirmed ≤24h', confirmed],
+      ['Confirmed active', confirmed],
       ['Interested', interested],
       ['Applied', applied]
     ];
@@ -785,7 +827,7 @@
       var rowClass = s ? 'row-' + s : '';
       var isNew = j.firstSeen === RUN.runDate;
       var dateTag = j.dateConfidence === 'confirmed'
-        ? '<span class="date-tag confirmed">confirmed ≤24h</span>'
+        ? '<span class="date-tag confirmed">confirmed active</span>'
         : '<span class="date-tag caveat">unverified date</span>';
 
       return '<div class="job-card ' + rowClass + '" style="animation-delay:' + Math.min(i * 0.03, 0.3) + 's">' +
