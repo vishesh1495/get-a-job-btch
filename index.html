@@ -205,7 +205,8 @@
     position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
     color: var(--text-dim); font-size: 14px; pointer-events: none;
   }
-  select#sort-select {
+  select#sort-select,
+  select.filter-select {
     background: var(--bg-elev);
     border: 1px solid var(--border);
     color: var(--text);
@@ -216,9 +217,12 @@
     cursor: pointer;
     outline: none;
   }
-  select#sort-select:hover { background: var(--bg-elev-hover); }
+  select#sort-select:hover,
+  select.filter-select:hover { background: var(--bg-elev-hover); }
+  select.filter-select.filter-active { border-color: var(--accent-border); color: #fff; }
 
   .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 22px; }
+  .dim-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
   .filter-btn {
     border: 1px solid var(--border);
     background: var(--bg-elev);
@@ -471,6 +475,18 @@
       <option value="fit">Sort: Best fit first</option>
       <option value="new">Sort: Newest first</option>
       <option value="company">Sort: Company A–Z</option>
+    </select>
+  </div>
+
+  <div class="dim-filters">
+    <select id="role-select" class="filter-select">
+      <option value="all">All roles</option>
+    </select>
+    <select id="score-select" class="filter-select">
+      <option value="all">All fit scores</option>
+    </select>
+    <select id="region-select" class="filter-select">
+      <option value="all">All locations</option>
     </select>
   </div>
 
@@ -853,6 +869,24 @@
   var searchTerm = '';
   var sortMode = 'fit';
   var toastTimer = null;
+  var roleFilter = 'all';
+  var scoreFilter = 'all';
+  var regionFilter = 'all';
+
+  function deriveRegion(location) {
+    var l = String(location).toLowerCase();
+    if (l.indexOf('france') !== -1) return 'France';
+    if (l.indexOf('germany') !== -1) return 'Germany';
+    if (l.indexOf('netherlands') !== -1) return 'Netherlands';
+    if (l.indexOf('ireland') !== -1) return 'Ireland';
+    if (l.indexOf('united kingdom') !== -1 || l.indexOf(' uk') !== -1 || l.indexOf('uk)') !== -1 || l.indexOf('uk,') !== -1 || l.indexOf('london') !== -1) return 'United Kingdom';
+    if (l.indexOf('united arab emirates') !== -1 || l.indexOf('uae') !== -1 || l.indexOf('dubai') !== -1 || l.indexOf('abu dhabi') !== -1) return 'UAE';
+    if (l.indexOf('united states') !== -1 || l.indexOf(', us') !== -1 || l.indexOf('us)') !== -1 || l.indexOf('california') !== -1) return 'United States';
+    if (l.indexOf('switzerland') !== -1 || l.indexOf('zurich') !== -1 || l.indexOf('geneva') !== -1) return 'Switzerland';
+    if (l.indexOf('luxembourg') !== -1) return 'Luxembourg';
+    if (l.indexOf('european union') !== -1 || l.indexOf('emea') !== -1) return 'Remote (EU/EMEA)';
+    return 'Other';
+  }
 
   function getStatus(id) {
     try { return localStorage.getItem(STATUS_PREFIX + id) || ''; } catch (e) { return ''; }
@@ -979,9 +1013,55 @@
       activeFilter === 'untouched' ? !s :
       s === activeFilter;
     if (!matchesFilter) return false;
+    if (roleFilter !== 'all' && job.roleFamily !== roleFilter) return false;
+    if (scoreFilter !== 'all' && job.score !== scoreFilter) return false;
+    if (regionFilter !== 'all' && deriveRegion(job.location) !== regionFilter) return false;
     if (!searchTerm) return true;
     var haystack = (job.title + ' ' + job.company + ' ' + job.location + ' ' + job.roleFamily).toLowerCase();
     return haystack.indexOf(searchTerm) !== -1;
+  }
+
+  function populateDimFilters() {
+    var roleSelect = document.getElementById('role-select');
+    var scoreSelect = document.getElementById('score-select');
+    var regionSelect = document.getElementById('region-select');
+
+    var roles = [];
+    JOBS.forEach(function (j) { if (roles.indexOf(j.roleFamily) === -1) roles.push(j.roleFamily); });
+    roles.sort();
+
+    var scoreOrder = ['High', 'Medium-High', 'Medium', 'Low-Medium', 'Low'];
+    var scores = scoreOrder.filter(function (sc) { return JOBS.some(function (j) { return j.score === sc; }); });
+
+    var regions = [];
+    JOBS.forEach(function (j) {
+      var r = deriveRegion(j.location);
+      if (regions.indexOf(r) === -1) regions.push(r);
+    });
+    regions.sort();
+
+    roleSelect.innerHTML = '<option value="all">All roles</option>' +
+      roles.map(function (r) { return '<option value="' + escapeHtml(r) + '">' + escapeHtml(r) + '</option>'; }).join('');
+    scoreSelect.innerHTML = '<option value="all">All fit scores</option>' +
+      scores.map(function (sc) { return '<option value="' + escapeHtml(sc) + '">' + escapeHtml(sc) + '</option>'; }).join('');
+    regionSelect.innerHTML = '<option value="all">All locations</option>' +
+      regions.map(function (r) { return '<option value="' + escapeHtml(r) + '">' + escapeHtml(r) + '</option>'; }).join('');
+
+    roleSelect.addEventListener('change', function (e) {
+      roleFilter = e.target.value;
+      roleSelect.classList.toggle('filter-active', roleFilter !== 'all');
+      renderGrid();
+    });
+    scoreSelect.addEventListener('change', function (e) {
+      scoreFilter = e.target.value;
+      scoreSelect.classList.toggle('filter-active', scoreFilter !== 'all');
+      renderGrid();
+    });
+    regionSelect.addEventListener('change', function (e) {
+      regionFilter = e.target.value;
+      regionSelect.classList.toggle('filter-active', regionFilter !== 'all');
+      renderGrid();
+    });
   }
 
   function sortJobs(list) {
@@ -1062,6 +1142,7 @@
   renderRunbar();
   renderStats();
   renderFilters();
+  populateDimFilters();
   renderGrid();
 })();
 </script>
